@@ -3,8 +3,8 @@ import { getCustomRepository } from "typeorm"
 import ProductsRepository from "../repositories/ProductsRepository"
 
 interface IRequest {
-  name: string,
-  price: number,
+  name: string;
+  price: number;
   quantity: number
 }
 
