@@ -20,8 +20,8 @@ export default class User {
   @Column()
   password: string;
 
-  @Column()
-  avatar: string;
+  @Column({type: 'varchar', nullable: true})
+  avatar: string | null;
 
   @CreateDateColumn()
   created_at: Date;
