@@ -16,6 +16,12 @@ export default class OrdersProducts {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  order_id: string;
+
+  @Column()
+  product_id: string;
+
   @ManyToOne(() => Order, order => order.orders_products)
   @JoinColumn( { name: 'order_id' })
   order: Order;
