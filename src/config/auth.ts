@@ -1,10 +1,11 @@
 export default {
   jwt: {
-    secret: 'f1e915ff831db06cf3fcb895fca51f63',
+    secret: process.env.APP_SECRET,
+    salt: process.env.APP_CRIPT_SALT || 8,
     expiresIn: '1d'
   },
   ethereal: {
-    user:'evert.toy40@ethereal.email',
-    pass: 'NYfw6p7Xx7MkaTqsJc',
+    user: process.env.APP_MAIL_USER,
+    pass: process.env.APP_MAIL_PASSWORD,
   }
 }

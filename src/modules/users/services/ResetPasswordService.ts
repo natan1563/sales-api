@@ -4,6 +4,7 @@ import { hash } from "bcryptjs";
 import { isAfter, addHours } from "date-fns";
 import UsersRepository from "../typeorm/repositories/UsersRepository";
 import UserTokensRepository from "../typeorm/repositories/UserTokensRepository";
+import authConfig from '@config/auth';
 
 interface IRequest {
   token: string;
@@ -32,7 +33,7 @@ export default class ResetPasswordService {
     if (isAfter(Date.now(), compareDate))
       throw new AppError('Token expired.');
 
-    user.password = await hash(password, 8);
+    user.password = await hash(password, authConfig.jwt.salt);
 
     await userRepository.save(user);
   }

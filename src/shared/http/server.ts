@@ -1,6 +1,8 @@
 import 'reflect-metadata';
+import 'dotenv/config';
 import { errors } from 'celebrate';
 import express, { NextFunction, Request, response, Response } from 'express';
+import { pagination } from 'typeorm-pagination';
 import 'express-async-errors';
 import cors from 'cors';
 import routes from './routes';
@@ -12,6 +14,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(pagination);
 
 app.use('/files', express.static(uploadConfig.directory));
 app.use(routes);

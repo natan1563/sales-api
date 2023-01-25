@@ -4,6 +4,7 @@ import User from "../typeorm/entities/User";
 import UsersRepository from "../typeorm/repositories/UsersRepository";
 import AppError from "@shared/errors/AppError";
 import { compare, hash } from "bcryptjs";
+import authConfig from '@config/auth';
 
 interface IRequest {
   user_id: string;
@@ -41,7 +42,7 @@ export default class UpdateProfileService {
       if (!checkOldPasword)
         throw new AppError("Old password does'nt valid", 400);
 
-      user.password = await hash(password, 8);
+      user.password = await hash(password, authConfig.jwt.salt);
     }
 
     user.name = name;
