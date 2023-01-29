@@ -3,6 +3,8 @@ import AppError from "@shared/errors/AppError";
 import UsersRepository from "../typeorm/repositories/UsersRepository";
 import UserTokensRepository from "../typeorm/repositories/UserTokensRepository";
 import Etherealmail from "@config/mail/EtherealMail";
+import SESMail from "@config/mail/SESMail";
+import mailConfig from "@config/mail/mail";
 import path from 'path';
 
 interface IRequest {
@@ -28,7 +30,8 @@ export default class SendForgotPasswordEmailService {
       'forgot_password.hbs'
     );
 
-    await Etherealmail.sendMail({
+    const driverMail = (mailConfig.driver === 'ses') ? SESMail : Etherealmail;
+    await driverMail.sendMail({
       to: {
         name: userExists.name,
         email: userExists.email,
