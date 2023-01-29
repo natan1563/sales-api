@@ -42,7 +42,7 @@ export default class UpdateProfileService {
       if (!checkOldPasword)
         throw new AppError("Old password does'nt valid", 400);
 
-      user.password = await hash(password, authConfig.jwt.salt);
+      user.password = await hash(password, Number(authConfig.jwt.salt));
     }
 
     user.name = name;

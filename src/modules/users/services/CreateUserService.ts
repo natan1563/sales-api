@@ -19,7 +19,7 @@ export default class CreateUserService {
     if (emailExists)
       throw new AppError('Email already exists', 400);
 
-    const hashedPassword = await hash(password, authConfig.jwt.salt);
+    const hashedPassword = await hash(password, Number(authConfig.jwt.salt));
     const user = userRepository.create({
       name,
       email,

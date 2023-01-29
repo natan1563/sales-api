@@ -33,7 +33,7 @@ export default class ResetPasswordService {
     if (isAfter(Date.now(), compareDate))
       throw new AppError('Token expired.');
 
-    user.password = await hash(password, authConfig.jwt.salt);
+    user.password = await hash(password, Number(authConfig.jwt.salt));
 
     await userRepository.save(user);
   }
