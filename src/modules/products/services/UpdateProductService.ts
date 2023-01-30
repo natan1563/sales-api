@@ -2,7 +2,7 @@ import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
 import Product from "../typeorm/entities/Product";
 import ProductsRepository from "../typeorm/repositories/ProductsRepository";
-import RedisCache from "@shared/cache/RedisCache";
+import redisCache from "@shared/cache/RedisCache";
 import { CacheKeys } from "../enum/CacheKeys";
 
 interface IRequest {
@@ -24,7 +24,6 @@ export default class UpdateProductService {
     if (productNameExists && productNameExists.id !== id)
       throw new AppError('There is already one product with this name', 400);
 
-    const redisCache = new RedisCache();
     await redisCache.invalidate(CacheKeys.listProduct)
 
     product.name     = name;

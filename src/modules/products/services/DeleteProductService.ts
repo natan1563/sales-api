@@ -2,7 +2,7 @@ import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
 import ProductsRepository from "../typeorm/repositories/ProductsRepository";
 import { CacheKeys } from "../enum/CacheKeys";
-import RedisCache from "@shared/cache/RedisCache";
+import redisCache from "@shared/cache/RedisCache";
 
 interface IRequest {
   id: string;
@@ -16,7 +16,6 @@ export default class DeleteProductService {
     if (!product)
       throw new AppError('Product not found', 404);
 
-    const redisCache = new RedisCache();
     await redisCache.invalidate(CacheKeys.listProduct)
 
     await productsRepository.remove(product)
