@@ -1,7 +1,7 @@
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
-import Product from "../typeorm/entities/Product";
-import ProductsRepository from "../typeorm/repositories/ProductsRepository";
+import Product from "../infra/typeorm/entities/Product";
+import ProductsRepository from "../infra/typeorm/repositories/ProductsRepository";
 import redisCache from "@shared/cache/RedisCache";
 import { CacheKeys } from "../enum/CacheKeys";
 
