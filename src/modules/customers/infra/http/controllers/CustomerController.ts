@@ -6,11 +6,11 @@ import ShowCustomerService   from '@modules/customers/services/ShowCustomerServi
 import CreateCustomerService from '@modules/customers/services/CreateCustomerService';
 import UpdateCustomerService from '@modules/customers/services/UpdateCustomerService';
 import DeleteCustomerService from '@modules/customers/services/DeleteCustomerService';
-import CustomersRepository from '../../typeorm/repositories/CustomersRepository';
+import { container } from 'tsyringe';
 
 export default class CustomerController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const listCustomersService = new ListCustomerService();
+    const listCustomersService = container.resolve(ListCustomerService);
     const listOfCustomers = await listCustomersService.execute();
 
     return response.json(listOfCustomers);
@@ -22,7 +22,7 @@ export default class CustomerController {
     if (!id)
       throw new AppError('Invalid parsed id', 400);
 
-    const showCustomerService = new ShowCustomerService();
+    const showCustomerService = container.resolve(ShowCustomerService);
     const customer = await showCustomerService.execute({ id });
 
     return response.json(customer);
@@ -30,12 +30,8 @@ export default class CustomerController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { name, email } = request.body;
-
-    const customersRepository = new CustomersRepository();
-
-    const createCustomerService = new CreateCustomerService(customersRepository);
-
-    const customer = await createCustomerService.execute({ name, email })
+    const createCustomer = container.resolve(CreateCustomerService);
+    const customer = await createCustomer.execute({ name, email })
 
     return response.json(customer);
   }
@@ -44,7 +40,7 @@ export default class CustomerController {
     const { id } = request.params;
     const { name, email } = request.body;
 
-    const updateCustomerService = new UpdateCustomerService();
+    const updateCustomerService = container.resolve(UpdateCustomerService);
     const customer = await updateCustomerService.execute({ id, name, email });
 
     return response.json(customer);
@@ -52,7 +48,7 @@ export default class CustomerController {
 
   public async delete (request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const deleteCustomerService = new DeleteCustomerService();
+    const deleteCustomerService = container.resolve(DeleteCustomerService);
 
     await deleteCustomerService.execute({ id });
 
