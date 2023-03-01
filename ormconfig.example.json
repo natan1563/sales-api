@@ -6,12 +6,13 @@
   "password": "docker",
   "database": "vendas",
   "entities": [
-    "./dist/modules/**/typeorm/entities/*.js"
+    "./dist/modules/**/infra/typeorm/entities/*{.ts,.js}",
+    "./src/modules/**/infra/typeorm/entities/*{.ts,.js}"
   ],
   "migrations": [
-    "./dist/shared/typeorm/migrations/*.js"
+    "./dist/shared/infra/typeorm/migrations/*.js"
   ],
   "cli": {
-    "migrationsDir": "./dist/shared/typeorm/migrations"
+    "migrationsDir": "./dist/shared/infra/typeorm/migrations"
   }
 }
