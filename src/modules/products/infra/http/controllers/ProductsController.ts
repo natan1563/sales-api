@@ -6,10 +6,11 @@ import ShowProductService from '@modules/products/services/ShowProductService';
 import CreateProductService from '@modules/products/services/CreateProductService';
 import UpdateProductService from '@modules/products/services/UpdateProductService';
 import DeleteProductService from '@modules/products/services/DeleteProductService';
+import { container } from 'tsyringe';
 
 export default class ProductsController {
-  public async index(request: Request, response: Response): Promise<Response> {
-    const listProductsService = new ListProductService();
+  public async index(_: Request, response: Response): Promise<Response> {
+    const listProductsService = container.resolve(ListProductService);
     const listOfProducts = await listProductsService.execute();
 
     return response.json(listOfProducts);
@@ -21,15 +22,15 @@ export default class ProductsController {
     if (!id)
       throw new AppError('Invalid parsed id', 400);
 
-    const showProductService = new ShowProductService();
-    const product = await showProductService.execute({ id });
+    const showProductService = container.resolve(ShowProductService);
+    const product = await showProductService.execute(id);
 
     return response.json(product);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { name, price, quantity } = request.body;
-    const createProductService = new CreateProductService();
+    const createProductService = container.resolve(CreateProductService);
     const product = await createProductService.execute({ name, price, quantity })
 
     return response.json(product);
@@ -39,7 +40,7 @@ export default class ProductsController {
     const { id } = request.params;
     const { name, price, quantity } = request.body;
 
-    const updateProductService = new UpdateProductService();
+    const updateProductService = container.resolve(UpdateProductService);
     const product = await updateProductService.execute({ id, name, price, quantity });
 
     return response.json(product);
@@ -47,7 +48,7 @@ export default class ProductsController {
 
   public async delete (request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const deleteProductService = new DeleteProductService();
+    const deleteProductService = container.resolve(DeleteProductService);
 
     await deleteProductService.execute({ id });
 

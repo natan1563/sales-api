@@ -1,9 +1,14 @@
-import { IFindProducts } from "@modules/products/infra/typeorm/entities/IFindProducts";
+import { IFindProduct } from "@modules/products/domain/models/IFindProduct";
 import { IProduct } from "../models/IProduct";
-import { IProductUpdate } from "../models/IProductUpdate";
+import { IProductSave } from "../models/IProductSave";
 
 export interface IProductsRepository {
   findByName(name: string): Promise<IProduct | undefined>;
-  findAllByIds(products_id: IFindProducts[]): Promise<IProduct[]>;
-  updateProduct(products: IProductUpdate[]): Promise<IProduct[]>;
+  findById(id: string): Promise<IProduct | undefined>;
+  findAll(): Promise<IProduct[]>;
+  findAllByIds(products_id: IFindProduct[]): Promise<IProduct[]>;
+  updateProduct(products: IProductSave[]): Promise<IProduct[]>;
+  create(product: IProductSave): IProduct;
+  save(product: IProduct): Promise<IProduct>;
+  remove(product: IProduct): Promise<void>;
 }

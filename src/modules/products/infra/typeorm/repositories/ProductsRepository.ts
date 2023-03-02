@@ -1,7 +1,8 @@
-import { IProductUpdate } from "@modules/products/domain/models/IProductUpdate";
+import { IProduct } from "@modules/products/domain/models/IProduct";
+import { IProductSave } from "@modules/products/domain/models/IProductSave";
 import { IProductsRepository } from "@modules/products/domain/repositories/IProductsRepository";
 import {  getRepository, In, Repository } from "typeorm";
-import { IFindProducts } from "../entities/IFindProducts";
+import { IFindProduct } from "../../../domain/models/IFindProduct";
 import Product from "../entities/Product";
 
 export default class ProductsRepository implements IProductsRepository {
@@ -16,8 +17,15 @@ export default class ProductsRepository implements IProductsRepository {
       where: { name }
     })
   }
+  public async findById(id: string): Promise<IProduct | undefined> {
+    return await this.ormRepository.findOne(id);
+  }
 
-  public async findAllByIds(product_ids: IFindProducts[]): Promise<Product[]> {
+  public async findAll(): Promise<Product[]> {
+    return await this.ormRepository.find();
+  }
+
+  public async findAllByIds(product_ids: IFindProduct[]): Promise<Product[]> {
     const productsIds = product_ids.map(product => product.id);
     const existsProducts = await this.ormRepository.find({
       where: {
@@ -28,7 +36,19 @@ export default class ProductsRepository implements IProductsRepository {
     return existsProducts;
   }
 
-  public async updateProduct(products: IProductUpdate[]): Promise<Product[]> {
+  public async updateProduct(products: IProductSave[]): Promise<Product[]> {
     return this.ormRepository.save(products);
+  }
+
+  public create(product: IProductSave): IProduct {
+    return this.ormRepository.create(product);
+  }
+
+  public async save(product: IProduct) {
+    return await this.ormRepository.save(product);
+  }
+
+  public async remove(product: IProduct): Promise<void> {
+    await this.ormRepository.remove(product as Product);
   }
 }

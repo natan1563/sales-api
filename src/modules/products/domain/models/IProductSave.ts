@@ -1,7 +1,7 @@
 import { IOrdersProducts } from "@modules/orders/domain/models/IOrdersProducts";
 
-export interface IProductUpdate {
-  id: string;
+export interface IProductSave {
+  id?: string;
   orders_products?: IOrdersProducts[];
   name?: string;
   price?: number;

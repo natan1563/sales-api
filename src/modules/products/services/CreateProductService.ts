@@ -3,6 +3,7 @@ import { getCustomRepository } from "typeorm"
 import ProductsRepository from "../infra/typeorm/repositories/ProductsRepository"
 import redisCache from "@shared/cache/RedisCache";
 import { CacheKeys } from "../enum/CacheKeys";
+import { inject, injectable } from "tsyringe";
 
 interface IRequest {
   name: string;
@@ -10,16 +11,21 @@ interface IRequest {
   quantity: number;
 }
 
+@injectable()
 export default class CreateProductService {
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: ProductsRepository
+  ) {}
+
   public async execute({name, price, quantity}: IRequest ) {
-    const productsRepository = getCustomRepository(ProductsRepository);
-    const productExists = await productsRepository.findByName(name)
+    const productExists = await this.productsRepository.findByName(name)
 
     if (productExists)
       throw new AppError('There is already a product with the name ' + name)
 
 
-    const product = productsRepository.create({
+    const product = this.productsRepository.create({
       name,
       price,
       quantity
@@ -27,8 +33,6 @@ export default class CreateProductService {
 
     await redisCache.invalidate(CacheKeys.listProduct)
 
-    await productsRepository.save(product)
-
-    return product
+    return this.productsRepository.save(product)
   }
 }
