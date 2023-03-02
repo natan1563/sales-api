@@ -7,7 +7,6 @@ import { inject, injectable } from "tsyringe";
 interface IRequest {
   id: string;
 }
-
 @injectable()
 export default class ShowOrderService {
   constructor(
