@@ -5,24 +5,31 @@ import { isAfter, addHours } from "date-fns";
 import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
 import UserTokensRepository from "../infra/typeorm/repositories/UserTokensRepository";
 import authConfig from '@config/auth';
+import { inject, injectable } from "tsyringe";
 
 interface IRequest {
   token: string;
   password: string;
 }
 
+@injectable()
 export default class ResetPasswordService {
-  public async execute({token, password}: IRequest): Promise<void> {
-    const userRepository = getCustomRepository(UsersRepository);
-    const userTokenRepository = getCustomRepository(UserTokensRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: UsersRepository,
 
-    const userToken = await userTokenRepository.findByToken(token);
+    @inject('UserTokensRepository')
+    private userTokensRepository: UserTokensRepository
+  ) {}
+
+  public async execute({token, password}: IRequest): Promise<void> {
+    const userToken = await this.userTokensRepository.findByToken(token);
 
     if (!userToken) {
       throw new AppError('User Token does not exists, or is invalid.');
     }
 
-    const user = await userRepository.findById(userToken.user_id);
+    const user = await this.usersRepository.findById(userToken.user_id);
 
     if (!user)
       throw new AppError('User not found.');
@@ -35,6 +42,6 @@ export default class ResetPasswordService {
 
     user.password = await hash(password, Number(authConfig.jwt.salt));
 
-    await userRepository.save(user);
+    await this.usersRepository.save(user);
   }
 }
