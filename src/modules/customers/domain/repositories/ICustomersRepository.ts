@@ -8,6 +8,6 @@ export interface ICustomerRepository {
   findByEmail(email: string): Promise<ICustomer | undefined>;
   create(data: ICreateCustomer): Promise<ICustomer>;
   save(customer: ICustomer): Promise<ICustomer>;
-  paginate(): Promise<PaginationAwareObject>;
+  paginate(): Promise<PaginationAwareObject | undefined>;
   remove(customer: ICustomer): Promise<void>;
 }

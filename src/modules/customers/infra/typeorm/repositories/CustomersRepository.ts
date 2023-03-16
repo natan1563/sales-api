@@ -20,7 +20,7 @@ export default class CustomersRepository implements ICustomerRepository {
     return await this.ormRepository.save(customer);
   }
 
-  public async paginate(): Promise<PaginationAwareObject> {
+  public async paginate(): Promise<PaginationAwareObject | undefined> {
     return await this.ormRepository.createQueryBuilder().paginate();
   }
 
