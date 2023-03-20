@@ -1,16 +1,19 @@
 import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
 import AppError from "@shared/errors/AppError";
 import User from "../infra/typeorm/entities/User";
-import { hash } from "bcryptjs";
-import authConfig from '@config/auth';
+
 import { inject, injectable } from "tsyringe";
 import { ICreateUser } from "../domain/models/ICreateUser";
+import { IHashProvider } from "../providers/HashProvider/models/IHashProvider";
 
 @injectable()
 export default class CreateUserService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: UsersRepository
+    private usersRepository: UsersRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider
   ) {}
 
   public async execute({ name, email, password}: ICreateUser): Promise<User> {
@@ -19,7 +22,7 @@ export default class CreateUserService {
     if (emailExists)
       throw new AppError('Email already exists', 400);
 
-    const hashedPassword = await hash(password, Number(authConfig.jwt.salt));
+    const hashedPassword = await this.hashProvider.generateHash(password);
     const user = this.usersRepository.create({
       name,
       email,
