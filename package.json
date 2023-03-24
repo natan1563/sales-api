@@ -8,7 +8,7 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
-    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files"
   },
   "keywords": [],
@@ -42,7 +42,7 @@
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.5",
     "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.1.0",
+    "tsconfig-paths": "^4.1.2",
     "typescript": "^4.8.4"
   },
   "dependencies": {
