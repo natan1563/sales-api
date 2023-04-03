@@ -10,8 +10,14 @@ import { container } from 'tsyringe';
 
 export default class CustomerController {
   public async index(request: Request, response: Response): Promise<Response> {
+    const page = request.query.page ? Number(request.query.page) : 1
+    const limit = request.query.limit ? Number(request.query.limit) : 15
+
     const listCustomersService = container.resolve(ListCustomerService);
-    const listOfCustomers = await listCustomersService.execute();
+    const listOfCustomers = await listCustomersService.execute({
+      page,
+      limit
+    });
 
     return response.json(listOfCustomers);
   }
